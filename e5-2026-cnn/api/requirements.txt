@@ -23,6 +23,7 @@ mysql-connector-python==9.2.0
 networkx==3.4.2
 numpy==2.2.3
 pillow==11.1.0
+prometheus-client==0.26.0
 pydantic==2.10.6
 pydantic_core==2.27.2
 Pygments==2.19.1
