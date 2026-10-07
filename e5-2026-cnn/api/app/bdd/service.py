@@ -25,7 +25,7 @@ class Service_Prediction(Connexion):
     def lister_predictions(cls):
         with cls.ouvrir_connexion() as (_, cursor):
             cursor.execute(
-                "SELECT predictions.image as image, labels.label as label, predictions.commentaire as commentaire, predictions.modele as modele FROM predictions JOIN labels ON predictions.label = labels.id"
+                "SELECT predictions.id as id, predictions.image as image, labels.label as label, predictions.commentaire as commentaire, predictions.modele as modele FROM predictions JOIN labels ON predictions.label = labels.id"
             )
 
             rows = cursor.fetchall()

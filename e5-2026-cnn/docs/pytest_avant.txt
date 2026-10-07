@@ -1,0 +1,30 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /home/go2375/e5-2026-cnn-cas-pratique/e5-2026-cnn/e5-2026-cnn/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/go2375/e5-2026-cnn-cas-pratique/e5-2026-cnn/e5-2026-cnn/api
+plugins: anyio-4.8.0
+collecting ... collected 3 items
+
+tests/test_service_prediction.py::test_requete_liste_selectionne_id FAILED [ 33%]
+tests/test_service_prediction.py::test_liste_renvoie_des_id_numeriques PASSED [ 66%]
+tests/test_service_prediction.py::test_prediction_sans_id_reste_none PASSED [100%]
+
+=================================== FAILURES ===================================
+______________________ test_requete_liste_selectionne_id _______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7b65b1200e00>
+
+    def test_requete_liste_selectionne_id(monkeypatch):
+        cursor = faux_cursor([])
+        brancher(monkeypatch, cursor)
+    
+        Service_Prediction.lister_predictions()
+    
+        sql = " ".join(cursor.execute.call_args[0][0].lower().split())
+>       assert "predictions.id as id" in sql
+E       AssertionError: assert 'predictions.id as id' in 'select predictions.image as image, labels.label as label, predictions.commentaire as commentaire, predictions.modele as modele from predictions join labels on predictions.label = labels.id'
+
+tests/test_service_prediction.py:43: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_service_prediction.py::test_requete_liste_selectionne_id - ...
+========================= 1 failed, 2 passed in 1.21s ==========================

@@ -1,0 +1,12 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /home/go2375/e5-2026-cnn-cas-pratique/e5-2026-cnn/e5-2026-cnn/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/go2375/e5-2026-cnn-cas-pratique/e5-2026-cnn/e5-2026-cnn/api
+plugins: anyio-4.8.0
+collecting ... collected 3 items
+
+tests/test_service_prediction.py::test_requete_liste_selectionne_id PASSED [ 33%]
+tests/test_service_prediction.py::test_liste_renvoie_des_id_numeriques PASSED [ 66%]
+tests/test_service_prediction.py::test_prediction_sans_id_reste_none PASSED [100%]
+
+============================== 3 passed in 0.52s ===============================

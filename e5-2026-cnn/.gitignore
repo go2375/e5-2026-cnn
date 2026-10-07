@@ -1,0 +1,18 @@
+# Environnement virtuel Python
+.venv/
+
+# Secrets et configuration locale
+.env
+
+# Données générées par Docker
+databases/
+api/satelite_images/*
+
+# Cache et fichiers Python générés
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Éditeur
+.vscode/*
+!.vscode/launch.json
