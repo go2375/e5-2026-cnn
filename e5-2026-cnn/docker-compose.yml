@@ -61,3 +61,29 @@ services:
     depends_on:
       - web
     restart: always
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    container_name: prometheus_cnn
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    depends_on:
+      - web
+    restart: always
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: grafana_cnn
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?Renseigner GRAFANA_PASSWORD dans .env}
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    depends_on:
+      - prometheus
+    restart: always
