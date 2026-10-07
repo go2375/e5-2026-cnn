@@ -12,6 +12,12 @@ from app.config import UPLOAD_FOLDER
 from app.bdd.service import Service_Prediction
 from app.bdd.prediction import Prediction
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s %(message)s",
+)
+log = logging.getLogger(__name__)
+
 @asynccontextmanager
 async def lifespan(app):
     Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
@@ -48,8 +54,10 @@ def upload_image(file: UploadFile = File(...)):
         except (UnidentifiedImageError, OSError, SyntaxError, Image.DecompressionBombError) as exc:
             raise HTTPException(status_code=400, detail="Image invalide") from exc
         label = cnn.predict_image(file_path)
+        log.info("Inference terminee : label=%s", label)
         prediction = Prediction(image=str(file_path), label=label, commentaire="OK", modele="CNN")
         Service_Prediction.sauvegarder_prediction(prediction)
+        log.info("Prediction enregistree via l'API : id=%s", prediction.id)
         return {"prediction": prediction}
     except Exception:
         file_path.unlink(missing_ok=True)
