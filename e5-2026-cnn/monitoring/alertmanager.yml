@@ -1,0 +1,17 @@
+global:
+  smtp_smarthost: "mailpit:1025"
+  smtp_from: "malgorzataryczerdumas@gmail.com"
+  smtp_require_tls: false
+
+route:
+  receiver: "email-equipe"
+  group_by: ["alertname"]
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 1h
+
+receivers:
+  - name: "email-equipe"
+    email_configs:
+      - to: "malgorzataryczerdumas@gmail.com"
+        send_resolved: true

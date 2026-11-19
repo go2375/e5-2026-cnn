@@ -1,0 +1,54 @@
+{
+  "title": "Suivi API CNN",
+  "uid": "cnn-monitoring",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "15s",
+  "time": { "from": "now-30m", "to": "now" },
+  "panels": [
+    {
+      "id": 1, "type": "timeseries", "title": "Requêtes par seconde (route, code)",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "" },
+      "targets": [
+        { "expr": "sum by (route, code) (rate(api_requests_total[1m]))", "legendFormat": "{{route}} {{code}}", "refId": "A" }
+      ]
+    },
+    {
+      "id": 2, "type": "timeseries", "title": "Temps moyen d'inférence (modèle, secondes)",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "" },
+      "targets": [
+        { "expr": "rate(prediction_inference_seconds_sum[5m]) / rate(prediction_inference_seconds_count[5m])", "legendFormat": "moyenne", "refId": "A" }
+      ]
+    },
+    {
+      "id": 3, "type": "piechart", "title": "Répartition des classes prédites (modèle)",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "" },
+      "targets": [
+        { "expr": "sum by (label) (prediction_class_total)", "legendFormat": "{{label}}", "instant": true, "refId": "A" }
+      ]
+    },
+    {
+      "id": 4, "type": "stat", "title": "Prédictions sans id (ticket 3)",
+      "gridPos": { "x": 12, "y": 8, "w": 6, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "" },
+      "targets": [
+        { "expr": "sum(prediction_id_missing_total)", "refId": "A" }
+      ],
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [
+        { "color": "green", "value": null }, { "color": "red", "value": 1 } ] } } }
+    },
+    {
+      "id": 5, "type": "stat", "title": "API disponible (1 = oui)",
+      "gridPos": { "x": 18, "y": 8, "w": 6, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "" },
+      "targets": [
+        { "expr": "up{job=\"api-cnn\"}", "refId": "A" }
+      ],
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [
+        { "color": "red", "value": null }, { "color": "green", "value": 1 } ] } } }
+    }
+  ]
+}

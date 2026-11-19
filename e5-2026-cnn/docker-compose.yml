@@ -72,6 +72,7 @@ services:
       - "${PROMETHEUS_PORT:-9090}:9090"
     depends_on:
       - web
+      - alertmanager
     restart: always
 
   grafana:
@@ -86,4 +87,22 @@ services:
       - "${GRAFANA_PORT:-3000}:3000"
     depends_on:
       - prometheus
+    restart: always
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: alertmanager_cnn
+    volumes:
+      - ./monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    ports:
+      - "${ALERTMANAGER_PORT:-9093}:9093"
+    depends_on:
+      - mailpit
+    restart: always
+
+  mailpit:
+    image: axllent/mailpit:v1.20
+    container_name: mailpit_cnn
+    ports:
+      - "${MAILPIT_PORT:-8025}:8025"
     restart: always

@@ -10,3 +10,8 @@ scrape_configs:
     metrics_path: /metrics
     static_configs:
       - targets: ["web:80"]
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ["alertmanager:9093"]
