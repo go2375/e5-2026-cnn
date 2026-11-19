@@ -1,6 +1,9 @@
 from app.bdd.connexion import Connexion
 from app.bdd.prediction import Prediction
 
+import logging
+
+log = logging.getLogger(__name__)
 
 class Service_Prediction(Connexion):
     @classmethod
@@ -19,6 +22,7 @@ class Service_Prediction(Connexion):
 
             bdd.commit()
             prediction.id = cursor.lastrowid
+            log.info("Prediction ecrite en base : id=%s label=%s modele=%s", prediction.id, prediction.label, prediction.modele)
         return prediction
 
     @classmethod
@@ -29,6 +33,7 @@ class Service_Prediction(Connexion):
             )
 
             rows = cursor.fetchall()
+            log.info("Predictions lues en base : %s", len(rows))
             length = len(rows) - 1
 
             return [Prediction(**row) for row in rows[:length]]

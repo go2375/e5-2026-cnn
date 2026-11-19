@@ -1,0 +1,49 @@
+groups:
+  - name: api-cnn
+    rules:
+      - alert: ApiIndisponible
+        expr: up{job="api-cnn"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "L'API ne répond plus au scrape Prometheus"
+
+      - alert: PredictionsSansId
+        expr: increase(prediction_id_missing_total[5m]) > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Des prédictions sont renvoyées sans id (régression du ticket 3)"
+
+      - alert: TauxErreurs5xxEleve
+        expr: |
+          sum(rate(api_requests_total{code=~"5.."}[5m]))
+          / sum(rate(api_requests_total[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Plus de 5 % de réponses 5xx sur 5 minutes"
+
+      - alert: InferenceLente
+        expr: |
+          rate(prediction_inference_seconds_sum[5m])
+          / rate(prediction_inference_seconds_count[5m]) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Temps moyen d'inférence supérieur à 1 s"
+
+      - alert: ClasseDominante
+        expr: |
+          max(increase(prediction_class_total[1h]))
+          / sum(increase(prediction_class_total[1h])) > 0.9
+          and sum(increase(prediction_class_total[1h])) >= 20
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Une classe représente plus de 90 % des prédictions (minimum 20 prédictions)"
